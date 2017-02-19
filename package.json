@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "events": "^1.1.1"
+    "crypto-js": "^3.1.9-1",
+    "key-mirror": "^1.0.1",
+    "oauth-1.0a": "^2.1.0"
   },
   "description": "CMMC",
   "devDependencies": {
