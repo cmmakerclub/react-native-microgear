@@ -36,11 +36,11 @@ export class NetpieAuth {
     log("STATE = ", this._storage.get(Storage.KEY_STATE));
     if (this._storage.get(Storage.KEY_STATE) == Storage.STATE.STATE_ACCESS_TOKEN) {
       log(`STATE = ACCESS_TOKEN, RETRVING LAST VALUES...`)
-      let appkey = this.appkey
-      let appsecret = this.appsecret
-      let appid = this.appid
-      let access_token = this._storage.get(Storage.KEY_ACCESS_TOKEN)
-      let access_token_secret = this._storage.get(Storage.KEY_ACCESS_TOKEN_SECRET)
+
+      let [appkey, appsecret, appid] = [this.appkey, this.appsecret, this.appid]
+      let [access_token, access_token_secret] = [this._storage.get(Storage.KEY_ACCESS_TOKEN),
+        this._storage.get(Storage.KEY_ACCESS_TOKEN_SECRET)]
+
       let endpoint = decodeURIComponent(this._storage.get(Storage.KEY_ENDPOINT))
       let hkey = Util.compute_hkey(access_token_secret, appsecret)
       let mqttusername = `${appkey}%${Math.floor(Date.now() / 1000)}`;
@@ -146,8 +146,6 @@ export class NetpieAuth {
         key: this._storage.get(Storage.KEY_OAUTH_REQUEST_TOKEN),
         secret: this._storage.get(Storage.KEY_OAUTH_REQUEST_TOKEN_SECRET)
       };
-      // log("req_acc_token", request_data)
-      // log("auth_header", auth_header)
       let auth_header = this.oauth.toHeader(this.oauth.authorize(request_data, _reqtok)).Authorization
       return auth_header;
     })
@@ -183,6 +181,7 @@ export class NetpieAuth {
       // @flow STEP1: GET REQUEST TOKEN
       let req1_resp = await this._getRequestToken();
       let {oauth_token, oauth_token_secret} = this.extract(await req1_resp.text());
+
       this._saveRequestToken({oauth_token, oauth_token_secret, verifier})
 
       // @flow STEP2: GET ACCESS TOKEN
