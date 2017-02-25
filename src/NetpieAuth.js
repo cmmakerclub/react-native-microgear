@@ -22,6 +22,7 @@ export class NetpieAuth {
     this.appkey = props.appkey
     this.appsecret = props.appsecret
     this.prepare(props)
+    this.initSync()
   }
 
   async initSync () {
@@ -35,8 +36,13 @@ export class NetpieAuth {
     let appsecret_cached = this._storage.get(Storage.KEY_APP_SECRET)
 
     let should_revoke = ((this.appid !== appid_cached) || (this.appkey !== appkey_cached) ||
-    (this.appsecret !== appsecret_cached) && appid_cached && appkey_cached && appsecret_cached)
+      (this.appsecret !== appsecret_cached)) && appid_cached !== undefined && appkey_cached !== undefined && appsecret_cached !== undefined
 
+    Util.log(`app id: ${this.appid} - ${appid_cached}`)
+    Util.log(`app key: ${this.appkey} - ${appkey_cached}`)
+    Util.log(`app secret: ${this.appsecret} - ${appsecret_cached}`)
+    Util.log(`app key: ${this.appkey} - ${appkey_cached}`)
+    
     Util.log("SHOULD REVOKE = ", should_revoke);
 
     if (should_revoke) {
@@ -62,6 +68,7 @@ export class NetpieAuth {
 
 
   getMqttAuth = async (callback) => {
+    Util.log("getMqttAuth")
     if (this._storage.get(Storage.KEY_STATE) === Storage.STATE.STATE_ACCESS_TOKEN) {
       Util.log(`STATE = ACCESS_TOKEN`)
       let [appkey, appsecret, appid] = [this.appkey, this.appsecret, this.appid]
@@ -83,7 +90,13 @@ export class NetpieAuth {
         port: port,
         endpoint: endpoint
       }
-      callback.apply(this, [ret]);
+      if (callback) {
+        callback.apply(this, [ret]);
+      }
+      else {
+        callback = () => {
+        }
+      }
       return ret;
     }
     else {
@@ -126,6 +139,7 @@ export class NetpieAuth {
   }
 
   async request (data, header_authorization_fn) {
+    Util.log("requesting..", data.url);
     return fetch(data.url, {
       method: data.method,
       timeout: 5000,

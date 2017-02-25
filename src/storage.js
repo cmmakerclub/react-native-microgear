@@ -13,7 +13,6 @@ class IStorage {
   }
 
   get (k) {
-    Util.log("Call get: ", this)
     return this._storage[k];
   }
 
@@ -39,9 +38,9 @@ class MyStorage {
   }
 
   async getItem (key, func) {
-    console.log("[1] GET ITEM", new Date().getTime());
+    Util.log("[1] GET ITEM", new Date().getTime());
     let val = await AsyncStorage.getItem(key);
-    console.log("[2] GET ITEM", new Date().getTime());
+    Util.log("[2] GET ITEM", new Date().getTime());
     return val;
   }
 
