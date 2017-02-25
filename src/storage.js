@@ -1,6 +1,9 @@
 let keyMirror = require('key-mirror');
 import {AsyncStorage} from 'react-native';
 
+import * as Helper from './Util'
+let Util = Helper.Util
+
 const CACHE_KEY = "mg_cached"
 class IStorage {
   _storage = {}
@@ -10,6 +13,7 @@ class IStorage {
   }
 
   get (k) {
+    Util.log("Call get: ", this)
     return this._storage[k];
   }
 
@@ -23,13 +27,21 @@ class IStorage {
 }
 
 class MyStorage {
+  constructor (name) {
+
+  }
+
   async setItem (key, value) {
+    Util.log("[1] setItem", key, value, new Date().getTime())
     let val = await AsyncStorage.setItem(key, value);
+    Util.log("[2] setItem", key, value, new Date().getTime())
     return val
   }
 
   async getItem (key, func) {
+    console.log("[1] GET ITEM", new Date().getTime());
     let val = await AsyncStorage.getItem(key);
+    console.log("[2] GET ITEM", new Date().getTime());
     return val;
   }
 
@@ -78,17 +90,16 @@ export class CMMC_Storage extends IStorage {
     super();
     this._storage = {}
     this._storage_driver = new MyStorage(name);
-    this.load();
   }
 
-  load () {
-    let loaded = this._storage_driver.getItem(CACHE_KEY);
+  async load () {
+    let loaded = await this._storage_driver.getItem(CACHE_KEY);
     console.log("LOADED = ", loaded);
-    // this._storage = JSON.parse(loaded)
-    // if (this._storage === null) {
-    //   this._storage = {};
-    //   this.commit();
-    // }
+    this._storage = await JSON.parse(loaded)
+    if (this._storage === null) {
+      this._storage = {};
+      this.commit();
+    }
     return this._storage;
   }
 
@@ -98,6 +109,7 @@ export class CMMC_Storage extends IStorage {
   }
 
   commit () {
-    // return this._storage_driver.setItem(CACHE_KEY, JSON.stringify(this._storage));
+    Util.log("... commit")
+    return this._storage_driver.setItem(CACHE_KEY, JSON.stringify(this._storage));
   }
 }

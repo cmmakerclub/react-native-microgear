@@ -3,6 +3,7 @@ var OAuth = require('oauth-1.0a');
 import {CMMC_Storage as Storage} from './Storage'
 import * as Helper from './Util'
 let Util = Helper.Util
+let CMMC_EventEmitter = require("./CMMC_EventEmitter")
 
 const VERSION = '1.0.9';
 const GEARAPIADDRESS = 'ga.netpie.io';
@@ -14,6 +15,7 @@ let verifier = MGREV;
 
 export class NetpieAuth {
   initilized = false
+  events = CMMC_EventEmitter.instance
 
   constructor (props) {
     this.appid = props.appid
@@ -24,6 +26,7 @@ export class NetpieAuth {
 
   async initSync () {
     this._storage = await new Storage(this.appid)
+    await this._storage.load();
     let access_token_cached = this._storage.get(Storage.KEY_ACCESS_TOKEN)
     let access_token_secret_cached = this._storage.get(Storage.KEY_ACCESS_TOKEN_SECRET)
     let revoke_token_cached = this._storage.get(Storage.KEY_REVOKE_TOKEN)
@@ -33,6 +36,8 @@ export class NetpieAuth {
 
     let should_revoke = ((this.appid !== appid_cached) || (this.appkey !== appkey_cached) ||
     (this.appsecret !== appsecret_cached) && appid_cached && appkey_cached && appsecret_cached)
+
+    Util.log("SHOULD REVOKE = ", should_revoke);
 
     if (should_revoke) {
       Util.log(`[CACHED] => ${access_token_cached} - ${access_token_secret_cached}, ${revoke_token_cached}`)
@@ -50,7 +55,7 @@ export class NetpieAuth {
         Util.log("ERROR", ex)
       }
     }
-
+    CMMC_EventEmitter.syncEmit("ready")
     this.initilized = true
     return this;
   }
@@ -79,6 +84,7 @@ export class NetpieAuth {
         endpoint: endpoint
       }
       callback.apply(this, [ret]);
+      return ret;
     }
     else {
       try {
@@ -189,6 +195,7 @@ export class NetpieAuth {
 
   _saveAccessToken = (object) => {
     Util.log(`SET STATE= ${Storage.STATE.STATE_ACCESS_TOKEN}`)
+
     let _data = new Map();
     _data.set(Storage.KEY_STATE, Storage.STATE.STATE_ACCESS_TOKEN);
     _data.set(Storage.KEY_ACCESS_TOKEN, object.oauth_token);
@@ -198,6 +205,7 @@ export class NetpieAuth {
     _data.set(Storage.KEY_FLAG, object.flag);
 
     for (let [key, value] of _data.entries()) {
+      Util.log("SAVE ACCESS TOKEN: KEY ", key, ">>", value)
       this._storage.set(key, value)
     }
     this._storage.commit()
