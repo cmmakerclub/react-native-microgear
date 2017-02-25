@@ -1,14 +1,12 @@
 let keyMirror = require('key-mirror');
 import {AsyncStorage} from 'react-native';
 
-
+const CACHE_KEY = "mg_cached"
 class IStorage {
   _storage = {}
 
   constructor () {
-    // this._storage.prototype.toString = () => {
-    //   return JSON.stringify(this)
-    // }
+
   }
 
   get (k) {
@@ -16,7 +14,6 @@ class IStorage {
   }
 
   set (k, v) {
-    console.log(`${"CALL SET: "} ${k} => ${v}`)
     this._storage[k] = v;
   }
 
@@ -38,53 +35,69 @@ class MyStorage {
 
 }
 
+let KEYS = {
+  STATE: 0x01,
+  OAUTH_REQUEST_TOKEN: 0x02,
+  OAUTH_REQUEST_TOKEN_SECRET: 0x03,
+  ACCESS_TOKEN: 0x04,
+  ACCESS_TOKEN_SECRET: 0x05,
+  REVOKE_TOKEN: 0x06,
+  ENDPOINT: 0x07,
+  FLAG: 0x08,
+  APP_KEY: 0x09,
+  APP_SECRET: 0x0a,
+  VERIFIER: 0x0b,
+  APP_ID: 0x0c,
+}
+
+let KEYS_MIRRORED = keyMirror(KEYS)
+
 export class CMMC_Storage extends IStorage {
   _storage_driver = null
-  _storage = {}
 
   static STATE = keyMirror({
     STATE_REQ_TOKEN: null,
     STATE_ACCESS_TOKEN: null,
+    STATE_REVOKE_TOKEN: null,
   });
 
-  static KEY_STATE = 0x01
-  static KEY_OAUTH_REQUEST_TOKEN = 0x02
-  static KEY_OAUTH_REQUEST_TOKEN_SECRET = 0x03
-  static KEY_ACCESS_TOKEN = 0x04
-  static KEY_ACCESS_TOKEN_SECRET = 0x05
-  static KEY_REVOKE_TOKEN = 0x06
-  static KEY_ENDPOINT = 0x07
-  static KEY_FLAG = 0x08
-  static KEY_APP_KEY = 0x09
-  static KEY_APP_SECRET = 0x0a
-  static KEY_VERIFIER = 0x0b
+  static KEY_STATE = KEYS_MIRRORED.STATE
+  static KEY_OAUTH_REQUEST_TOKEN = KEYS_MIRRORED.OAUTH_REQUEST_TOKEN
+  static KEY_OAUTH_REQUEST_TOKEN_SECRET = KEYS_MIRRORED.OAUTH_REQUEST_TOKEN_SECRET
+  static KEY_ACCESS_TOKEN = KEYS_MIRRORED.ACCESS_TOKEN
+  static KEY_ACCESS_TOKEN_SECRET = KEYS_MIRRORED.ACCESS_TOKEN_SECRET
+  static KEY_REVOKE_TOKEN = KEYS_MIRRORED.REVOKE_TOKEN
+  static KEY_ENDPOINT = KEYS_MIRRORED.ENDPOINT
+  static KEY_FLAG = KEYS_MIRRORED.FLAG
+  static KEY_APP_KEY = KEYS_MIRRORED.APP_KEY
+  static KEY_APP_SECRET = KEYS_MIRRORED.APP_SECRET
+  static KEY_VERIFIER = KEYS_MIRRORED.VERIFIER
+  static KEY_APP_ID = KEYS_MIRRORED.APP_ID;
 
-  constructor (name = 'tmp', open_now = true) {
+  constructor (name = 'tmp', loaded_fn) {
     super();
-    // this._storage_driver = new localStorage('./' + name);
-    this._storage_driver = new MyStorage()
+    this._storage = {}
+    this._storage_driver = new MyStorage(name);
     this.load();
   }
 
-  async load () {
-    let loaded = await this._storage_driver.getItem("mg_cached");
-    this._storage = JSON.parse(loaded)
-    if (this._storage == null) {
-      this._storage = {};
-    }
+  load () {
+    let loaded = this._storage_driver.getItem(CACHE_KEY);
+    console.log("LOADED = ", loaded);
+    // this._storage = JSON.parse(loaded)
+    // if (this._storage === null) {
+    //   this._storage = {};
+    //   this.commit();
+    // }
+    return this._storage;
   }
 
-  async commit () {
-    super.commit();
-    await this._storage_driver.setItem("mg_cached", JSON.stringify(this._storage));
-    // console.log(`OBJECT: ${JSON.stringify(this._storage)}`)
-    // console.log(`${"COMMIT LOOOP: "}`)
-    // this._storage.forEach((k, v) => {
-    //   console.log(`k: ${k}, v: ${v}`)
-    // });
-    //
-    // for (let obj of this._storage) {
-    //   console.log("=>", obj);
-    // }
+  clear() {
+    this._storage = {}
+    this.commit()
+  }
+
+  commit () {
+    // return this._storage_driver.setItem(CACHE_KEY, JSON.stringify(this._storage));
   }
 }
