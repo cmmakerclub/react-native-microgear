@@ -1,7 +1,7 @@
 'use strict';
 
 import {Client, Message} from 'react-native-paho-mqtt';
-import * as CMMC from '../../react-native-netpie-auth'
+import * as CMMC from '../../react-native-microgear'
 let CMMC_EventEmitter = require("./CMMC_EventEmitter")
 
 //Set up an in-memory alternative to global localStorage
