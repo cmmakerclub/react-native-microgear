@@ -2,7 +2,9 @@
   "dependencies": {
     "crypto-js": "^3.1.9-1",
     "key-mirror": "^1.0.1",
-    "oauth-1.0a": "^2.1.0"
+    "oauth-1.0a": "^2.1.0",
+    "fbemitter": "^2.1.1",
+    "react-native-paho-mqtt": "git+ssh://git@github.com/cmmakerclub/react-native-paho-mqtt.git"
   },
   "description": "CMMC",
   "devDependencies": {
