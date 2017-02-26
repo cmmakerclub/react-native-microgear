@@ -43,23 +43,26 @@ class MicroGear {
   }
 
   on (eventName: string, callback: () => void) {
-    this.events.addListener.apply(this.events, [eventName, callback])
+    this.events.addListener(eventName, callback)
+  }
+
+  isConnected() {
+    return this.client.isConnected()
   }
 
   subscribe (topic: string) {
     let t = `${this.mqtt.prefix}/${topic}`
-    console.log(`subscribing ${t}`)
-
     return this.client.subscribe(t)
   }
 
 
   publish (topic: string, payload: Payload, retain = false, qos = 0) {
     const message = new Message(payload);
-    message.retain = retain
-    message.qos = qos
+    // message.retain = retain
+    // message.qos = qos
     message.destinationName = `${this.mqtt.prefix}/${topic}`;
     this.client.send(message);
+    // console.log(this.client.getTraceLog())
   }
 
   connect (appid) {
@@ -83,6 +86,7 @@ class MicroGear {
         this.client = new Client({
           uri: `ws://${this.mqtt.host}:${this.ws_port}/`, clientId: this.mqtt.client_id, storage: myStorage
         });
+
 
         // set event handlers
         this.client.on('connectionLost', (responseObject) => {
