@@ -93,7 +93,7 @@ export class CMMC_Storage extends IStorage {
 
   async load () {
     let loaded = await this._storage_driver.getItem(CACHE_KEY);
-    console.log("LOADED = ", loaded);
+    Util.log("LOADED = ", loaded);
     this._storage = await JSON.parse(loaded)
     if (this._storage === null) {
       this._storage = {};

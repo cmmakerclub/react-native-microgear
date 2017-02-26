@@ -77,6 +77,10 @@ class MicroGear {
   connect (appid) {
     this.appid = appid
 
+    console.log('appid ', this.appid)
+    console.log('appkey', this.appkey)
+    console.log('appsecret', this.appsecret)
+
     if (!this.initialized) {
       this.initialized = true;
     }
@@ -93,10 +97,6 @@ class MicroGear {
       return;
     }
 
-    console.log('appid ', this.appid)
-    console.log('appkey', this.appkey)
-    console.log('appsecret', this.appsecret)
-
     this.netpie_auth = new CMMC.NetpieAuth({
       appid: this.appid,
       appkey: this.appkey,
@@ -111,8 +111,6 @@ class MicroGear {
         this.client = new Client({
           uri: `ws://${this.mqtt.host}:${this.ws_port}/`, clientId: this.mqtt.client_id, storage: myStorage
         });
-
-
         // set event handlers
         this.client.on('connectionLost', (responseObject) => {
           if (responseObject.errorCode !== 0) {
@@ -134,11 +132,8 @@ class MicroGear {
         }).then((...args) => {
           MicroGearEventEmitter.syncEmit("connected", ...args)
         });
-
-
       });
     });
-
   }
 
 }
