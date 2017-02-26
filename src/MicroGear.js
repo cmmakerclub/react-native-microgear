@@ -27,6 +27,7 @@ class MicroGear {
   appsecret = ''
   prefix = ''
   mqtt = {}
+  initialized = false
 
   events = MicroGearEventEmitter.instance
 
@@ -68,6 +69,22 @@ class MicroGear {
   connect (appid) {
     this.appid = appid
 
+    if (!this.initialized) {
+      this.initialized = true;
+    }
+    else {
+      // reconnect
+      this.client.connect({
+        cleanSession: true,
+        userName: `${this.mqtt.username}`,
+        password: this.mqtt.password,
+        useSSL: false
+      }).then((...args) => {
+        MicroGearEventEmitter.syncEmit("connected", ...args)
+      });
+      return;
+    }
+
     console.log('appid ', this.appid)
     console.log('appkey', this.appkey)
     console.log('appsecret', this.appsecret)
@@ -94,6 +111,7 @@ class MicroGear {
             console.log(responseObject.errorMessage);
           }
           MicroGearEventEmitter.syncEmit("closed", responseObject)
+          MicroGearEventEmitter.syncEmit("disconnected", responseObject)
         });
 
         this.client.on('messageReceived', (message) => {
