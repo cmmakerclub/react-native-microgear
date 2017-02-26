@@ -47,23 +47,31 @@ class MicroGear {
     this.events.addListener(eventName, callback)
   }
 
-  isConnected() {
+  isConnected () {
     return this.client.isConnected()
   }
 
   subscribe (topic: string) {
-    let t = `${this.mqtt.prefix}/${topic}`
+    let t = `/${this.appid}${topic}`
     return this.client.subscribe(t)
   }
 
+  unsubscribe (topic: string) {
+    let t = `/${this.appid}${topic}`
+    return this.client.unsubscribe(t)
+  }
+
+  chat (who, text) {
+    let t = `/gearname/${who}`
+    this.publish(t, text)
+  }
 
   publish (topic: string, payload: Payload, retain = false, qos = 0) {
     const message = new Message(payload);
-    // message.retain = retain
-    // message.qos = qos
-    message.destinationName = `${this.mqtt.prefix}/${topic}`;
+    message.retain = retain
+    message.qos = qos
+    message.destinationName = `/${this.appid}${topic}`;
     this.client.send(message);
-    // console.log(this.client.getTraceLog())
   }
 
   connect (appid) {
