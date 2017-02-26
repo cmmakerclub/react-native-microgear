@@ -1,8 +1,8 @@
 # react-native-microgear
 
-`react-native init yourapp`
-`cd yourapp`
-`npm install --save https://github.com/cmmakerclub/react-native-microgear.git`
+* `react-native init yourapp`
+* `cd yourapp`
+* `npm install --save https://github.com/cmmakerclub/react-native-microgear.git`
 
 Code
 
