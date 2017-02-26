@@ -21,7 +21,7 @@ class MicroGearEventEmitter extends CMMC_EventEmitter {
 
 type Payload = string | Uint8Array;
 
-class MicroGear {
+export class MicroGear {
   appid = ''
   appkey = ''
   appsecret = ''
@@ -135,6 +135,4 @@ class MicroGear {
       });
     });
   }
-
 }
-module.exports = MicroGear;
