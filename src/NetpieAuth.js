@@ -22,9 +22,9 @@ export class NetpieAuth {
     this.appid = props.appid
     this.appkey = props.appkey
     this.appsecret = props.appsecret
+    verifier = props.alias || MGREV
     this.prepare(props)
     this.initSync()
-
   }
 
   async initSync () {

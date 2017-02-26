@@ -19,6 +19,8 @@ class MicroGearEventEmitter extends CMMC_EventEmitter {
 
 }
 
+type Payload = string | Uint8Array;
+
 class MicroGear {
   appid = ''
   appkey = ''
@@ -32,17 +34,32 @@ class MicroGear {
     this.appid = config.appid
     this.appkey = config.key
     this.appsecret = config.secret
+    this.alias = config.alias
+    this.ws_port = config.port || 8083
   }
 
   static create (config) {
-    console.log("config ====>", config)
-
     return new MicroGear(config);
   }
 
+  on (eventName: string, callback: () => void) {
+    this.events.addListener.apply(this.events, [eventName, callback])
+  }
+
   subscribe (topic: string) {
-    // let topic = `${mqtt.prefix}/#`
-    return this.client.subscribe(topic)
+    let t = `${this.mqtt.prefix}/${topic}`
+    console.log(`subscribing ${t}`)
+
+    return this.client.subscribe(t)
+  }
+
+
+  publish (topic: string, payload: Payload, retain = false, qos = 0) {
+    const message = new Message(payload);
+    message.retain = retain
+    message.qos = qos
+    message.destinationName = `${this.mqtt.prefix}/${topic}`;
+    this.client.send(message);
   }
 
   connect (appid) {
@@ -52,13 +69,19 @@ class MicroGear {
     console.log('appkey', this.appkey)
     console.log('appsecret', this.appsecret)
 
-    this.netpie_auth = new CMMC.NetpieAuth({appid: this.appid, appkey: this.appkey, appsecret: this.appsecret});
+    this.netpie_auth = new CMMC.NetpieAuth({
+      appid: this.appid,
+      appkey: this.appkey,
+      appsecret: this.appsecret,
+      verifier: this.alias
+    });
+
     this.netpie_auth.events.on("ready", () => {
       this.netpie_auth.getMqttAuth((mqtt) => {
         Object.assign(this.mqtt, mqtt);
         this.prefix = this.mqtt.prefix
         this.client = new Client({
-          uri: `ws://${this.mqtt.host}:8083/`, clientId: this.mqtt.client_id, storage: myStorage
+          uri: `ws://${this.mqtt.host}:${this.ws_port}/`, clientId: this.mqtt.client_id, storage: myStorage
         });
 
         // set event handlers
@@ -66,7 +89,7 @@ class MicroGear {
           if (responseObject.errorCode !== 0) {
             console.log(responseObject.errorMessage);
           }
-          MicroGearEventEmitter.syncEmit("lost", responseObject)
+          MicroGearEventEmitter.syncEmit("closed", responseObject)
         });
 
         this.client.on('messageReceived', (message) => {
@@ -80,7 +103,6 @@ class MicroGear {
           useSSL: false
         }).then((...args) => {
           MicroGearEventEmitter.syncEmit("connected", ...args)
-        }).then(() => {
         });
 
 
