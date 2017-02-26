@@ -44,12 +44,12 @@
       "email": "nat@cmmc.io"
     }
   ],
-  "name": "react-native-netpie-auth",
+  "name": "react-native-microgear",
   "optionalDependencies": {},
   "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cmmakerclub/react-native-netpie-auth.git"
+    "url": "git+https://github.com/cmmakerclub/react-native-microgear.git"
   },
   "scripts": {
     "flow": "flow",
@@ -57,5 +57,5 @@
     "lint": "eslint .",
     "test": "eslint . && flow && jest"
   },
-  "version": "0.0.1"
+  "version": "0.0.1a"
 }
