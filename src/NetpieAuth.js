@@ -1,6 +1,6 @@
 var OAuth = require('oauth-1.0a');
 // let fetch = require("node-fetch")
-import {CMMC_Storage as Storage} from './Storage'
+import {CMMC_Storage as Storage} from './CStorage'
 import * as Helper from './Util'
 let Util = Helper.Util
 let CMMC_EventEmitter = require("./CMMC_EventEmitter")
