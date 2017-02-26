@@ -29,17 +29,17 @@
          clearInterval(interval)
        }
      }, 500)
-   });
+    });
    
-   this.microgear.on("message", (message) => {
+    this.microgear.on("message", (message) => {
      console.log(`topic: ${message.destinationName}, payload: ${message.payloadString}`);
      //this.setState({text: message.payloadString})
-   });
+    });
    
-   this.microgear.on("disconnected", () => {
-     console.log("Disconnected...")
-     setTimeout(() => {
-       microgear.connect(appid)
-     }, 2000)
-   })
-   microgear.connect(appid)
+     this.microgear.on("disconnected", () => {
+       console.log("Disconnected...")
+       setTimeout(() => {
+         microgear.connect(appid)
+       }, 2000)
+     })
+     microgear.connect(appid)
