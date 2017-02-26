@@ -1,10 +1,16 @@
 # react-native-microgear
 
-    npm install --save https://github.com/cmmakerclub/react-native-microgear.git
-    
+`react-native init yourapp`
+`cd yourapp`
+`npm install --save https://github.com/cmmakerclub/react-native-microgear.git`
+
+Code
+
     import {MicroGear} from 'react-native-microgear'
     const appid = "app-id";
-    
+
+
+
     this.microgear = MicroGear.create({
          key: 'yourkey',
          secret: 'your-secret',
