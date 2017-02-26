@@ -135,4 +135,6 @@ export class MicroGear {
       });
     });
   }
+
 }
+module.exports = MicroGear;
