@@ -18,11 +18,13 @@ export class NetpieAuth {
   events = CMMC_EventEmitter.instance
 
   constructor (props) {
+    Util.log("props => ", props)
     this.appid = props.appid
     this.appkey = props.appkey
     this.appsecret = props.appsecret
     this.prepare(props)
     this.initSync()
+
   }
 
   async initSync () {
@@ -36,13 +38,13 @@ export class NetpieAuth {
     let appsecret_cached = this._storage.get(Storage.KEY_APP_SECRET)
 
     let should_revoke = ((this.appid !== appid_cached) || (this.appkey !== appkey_cached) ||
-      (this.appsecret !== appsecret_cached)) && appid_cached !== undefined && appkey_cached !== undefined && appsecret_cached !== undefined
+      (this.appsecret !== appsecret_cached)) && (appid_cached !== undefined) && (appkey_cached !== undefined) && (appsecret_cached !== undefined)
 
     Util.log(`app id: ${this.appid} - ${appid_cached}`)
     Util.log(`app key: ${this.appkey} - ${appkey_cached}`)
     Util.log(`app secret: ${this.appsecret} - ${appsecret_cached}`)
     Util.log(`app key: ${this.appkey} - ${appkey_cached}`)
-    
+
     Util.log("SHOULD REVOKE = ", should_revoke);
 
     if (should_revoke) {
@@ -53,9 +55,7 @@ export class NetpieAuth {
         });
         let revoke_text = await resp.text();
         Util.log(`REVOKE RESPONSE = ${revoke_text}`)
-        if (revoke_text === "SUCCESS") {
-          this._storage.clear();
-        }
+        this._storage.clear();
       }
       catch (ex) {
         Util.log("ERROR", ex)
