@@ -10,7 +10,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
+  LayoutAnimation
 } from 'react-native';
 
 
@@ -39,9 +40,25 @@ export default class netpie_demo extends Component {
   }
 
   setTemp (c: number) {
+    // LayoutAnimation.configureNext({
+    //   duration: 10, create: {
+    //     type: LayoutAnimation.Types.linear,
+    //     property: LayoutAnimation.Properties.opacity
+    //   },
+    //   update: {
+    //     type: LayoutAnimation.Types.linear
+    //   }
+    // })
+
+    let animation = LayoutAnimation.create(100, LayoutAnimation.Types.linear);
     let resultHeightPx = (405 * c) / 100;
     let resultMarginTop = 405 - resultHeightPx + 30;
-    this.setState({temp: c, height: resultHeightPx, marginTop: resultMarginTop});
+    this.setState({height: resultHeightPx, marginTop: resultMarginTop});
+
+    LayoutAnimation.configureNext(animation, () => {
+      this.setState({temp: c});
+    })
+
   }
 
   componentWillMount () {
@@ -63,7 +80,7 @@ export default class netpie_demo extends Component {
         else {
           clearInterval(interval)
         }
-      }, 2000)
+      }, 1500)
     });
 
     this.microgear.on("message", (message) => {
@@ -80,7 +97,10 @@ export default class netpie_demo extends Component {
   }
 
   componentDidMount () {
-    this.setTemp(30)
+    this.setTemp(0)
+    setTimeout(() => {
+      this.setTemp(30)
+    }, 500)
     this.microgear.connect(appid)
   }
 
