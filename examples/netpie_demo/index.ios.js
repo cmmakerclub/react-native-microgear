@@ -46,7 +46,7 @@ export default class netpie_demo extends Component {
 
   componentWillMount () {
     this.microgear.on("connected", (...args) => {
-      console.log(">>> on connected...", ...args)
+      console.log("netpie connected");
       let counter = 0
       this.microgear.subscribe("/gearname/#").then(() => {
         console.log('subscribe..')
