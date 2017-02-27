@@ -1,0 +1,3 @@
+rootProject.name = 'netpie_demo'
+
+include ':app'
