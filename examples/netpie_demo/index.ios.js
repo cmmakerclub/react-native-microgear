@@ -40,16 +40,6 @@ export default class netpie_demo extends Component {
   }
 
   setTemp (c: number) {
-    // LayoutAnimation.configureNext({
-    //   duration: 10, create: {
-    //     type: LayoutAnimation.Types.linear,
-    //     property: LayoutAnimation.Properties.opacity
-    //   },
-    //   update: {
-    //     type: LayoutAnimation.Types.linear
-    //   }
-    // })
-
     let animation = LayoutAnimation.create(100, LayoutAnimation.Types.linear);
     let resultHeightPx = (405 * c) / 100;
     let resultMarginTop = 405 - resultHeightPx + 30;
