@@ -1,6 +1,14 @@
 # react-native-microgear
 
 
+# example
+*  git clone https://github.com/cmmakerclub/react-native-microgear
+* `cd react-native-microgear/examples/netpie_demo`
+* `npm install`
+* `react-native run-ios`
+
+# your own apps
+
 * `react-native init yourapp`
 * `cd yourapp`
 * `npm install --save https://github.com/cmmakerclub/react-native-microgear.git`
