@@ -36,7 +36,7 @@ export class MicroGear {
     this.appkey = config.key
     this.appsecret = config.secret
     this.alias = config.alias
-    this.ws_port = config.port || 8083
+    this.ws_port = config.port || 8084
   }
 
   static create (config) {
@@ -109,7 +109,7 @@ export class MicroGear {
         Object.assign(this.mqtt, mqtt);
         this.prefix = this.mqtt.prefix
         this.client = new Client({
-          uri: `ws://${this.mqtt.host}:${this.ws_port}/`, clientId: this.mqtt.client_id, storage: myStorage
+          uri: `wss://${this.mqtt.host}:${this.ws_port}/`, clientId: this.mqtt.client_id, storage: myStorage
         });
         // set event handlers
         this.client.on('connectionLost', (responseObject) => {
@@ -128,7 +128,7 @@ export class MicroGear {
           cleanSession: true,
           userName: `${mqtt.username}`,
           password: mqtt.password,
-          useSSL: false
+          useSSL: true
         }).then((...args) => {
           MicroGearEventEmitter.syncEmit("connected", ...args)
         });

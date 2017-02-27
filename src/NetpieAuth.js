@@ -7,10 +7,10 @@ let CMMC_EventEmitter = require("./CMMC_EventEmitter")
 
 const VERSION = '1.0.9';
 const GEARAPIADDRESS = 'ga.netpie.io';
-const GEARAPIPORT = '8080';
+const GEARAPIPORT = '8081';
 const MGREV = 'NJS1a';
 
-const gearauthurl = `http://${GEARAPIADDRESS}:${GEARAPIPORT}`
+const gearauthurl = `https://${GEARAPIADDRESS}:${GEARAPIPORT}`
 let verifier = MGREV;
 
 export class NetpieAuth {
