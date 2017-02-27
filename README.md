@@ -6,6 +6,7 @@
 * `cd react-native-microgear/examples/netpie_demo`
 * `npm install`
 * `react-native run-ios`
+* `react-native run-android`
 
 # your own application
 
@@ -26,6 +27,7 @@
 ## initialize
 
     const appid = "app-id";
+    
     this.microgear = MicroGear.create({
          key: 'yourkey',
          secret: 'your-secret',
