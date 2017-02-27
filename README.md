@@ -14,10 +14,10 @@
 ## import
 
     import {MicroGear} from 'react-native-microgear'
-    const appid = "app-id";
 
 ## initialize
 
+    const appid = "app-id";
     this.microgear = MicroGear.create({
          key: 'yourkey',
          secret: 'your-secret',
