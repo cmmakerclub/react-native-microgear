@@ -11,15 +11,20 @@
 
 # Code
 
+## import
+
     import {MicroGear} from 'react-native-microgear'
     const appid = "app-id";
 
+## initialize
 
     this.microgear = MicroGear.create({
          key: 'yourkey',
          secret: 'your-secret',
          alias: "alias"
     });
+
+## event listeners
     
     this.microgear.on("connected", (...args) => {
      console.log(">>> on connected...", ...args)
@@ -52,4 +57,7 @@
          microgear.connect(appid)
        }, 2000)
      })
+
+## connect
+
      microgear.connect(appid)
